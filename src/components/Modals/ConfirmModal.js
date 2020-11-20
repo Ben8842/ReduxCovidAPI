@@ -11,7 +11,7 @@ const ConfirmModal = ({
   return (
     <div className="modal-content">
       <div className="modal-header">
-        <h5 className="modal-title">{title}</h5>
+        <h1 className="modal-title">{title}</h1>
         <button
           type="button"
           className="close"
@@ -22,9 +22,9 @@ const ConfirmModal = ({
         </button>
       </div>
       <div className="modal-body">
-        <p>{message}</p>
-        <p>{message2}</p>
-        <p>{message3}</p>
+        <h3>{message}</h3>
+        <h3>{message2}</h3>
+        <h3>{message3}</h3>
       </div>
       <div className="modal-footer">
         <button

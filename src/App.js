@@ -18,18 +18,80 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
+var cheese = [
+  "AK",
+  "AL",
+  "AR",
+  "AS",
+  "AZ",
+  "CA",
+  "CO",
+  "CT",
+  "DC",
+  "DE",
+  "FL",
+  "GA",
+  "GU",
+  "HI",
+  "IA",
+  "ID",
+  "IL",
+  "IN",
+  "KS",
+  "KY",
+  "LA",
+  "MA",
+  "MD",
+  "ME",
+  "MI",
+  "MN",
+  "MO",
+  "MP",
+  "MS",
+  "MT",
+  "NC",
+  "ND",
+  "NE",
+  "NH",
+  "NJ",
+  "NM",
+  "NV",
+  "NY",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "PR",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VA",
+  "VI",
+  "VT",
+  "WA",
+  "WI",
+  "WV",
+  "WY",
+];
+
+let figureout = (abbreviation) => {
+  var finder = cheese.indexOf(abbreviation);
+  console.log(finder + " figureout " + abbreviation + " abbreviation");
+  return finder;
+};
+
 class App extends Component {
   mapHandler = (event) => {
-    alert(event.target.dataset.name);
+    //clickHandler: this.openConfirmModal;
+    let boat = figureout(event.target.dataset.name);
+    console.log(boat);
+    this.openConfirmModal(boat);
   };
   statesFilling = () => {
-    return {
-      TX: {
-        fill: "yellow",
-        clickHandler: this.openConfirmModal,
-        //clickHandler: () => alert("The state of Texas has a lot of Positive Cases"),
-      },
-    };
+    return {};
   };
   constructor(props) {
     super(props);
@@ -94,17 +156,17 @@ class App extends Component {
     );
   }
 
-  openConfirmModal() {
+  openConfirmModal(file) {
     var { isLoaded, citems } = this.state;
-
+    console.log(file + " number is the index");
     this.props.showModal(
       {
         open: true,
-        title: "Texas",
-        message: "Texas has " + citems[47].positive + " positive cases",
+        title: citems[file].state,
+        message: citems[file].positive + " positive cases",
         message2:
-          citems[47].hospitalizedCurrently + " are currently hospitalized",
-        message3: "Texas has " + citems[47].death + " total deaths",
+          citems[file].hospitalizedCurrently + " are currently hospitalized",
+        message3: citems[file].death + " total deaths",
         confirmAction: this.closeModal,
         closeModal: this.closeModal,
       },
