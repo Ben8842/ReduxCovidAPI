@@ -1,3 +1,11 @@
+body {
+  background-color: lightblue;
+}
+
+.app-titles {
+  color: white;
+}
+
 path {
   pointer-events: all;
 }
@@ -9,7 +17,7 @@ path:hover {
 .app {
   text-align: center;
   height: 100vh;
-  background: black;
+  background: darkblue;
 }
 
 .app-logo {
