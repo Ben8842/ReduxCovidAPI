@@ -9,7 +9,7 @@ import "./App.css";
 import { showModal, hideModal } from "./actions/modal";
 import USAMap from "react-usa-map";
 
-const MESSAGE = "A boat modal component.";
+const MESSAGE = "A modal component.";
 
 const mapDispatchToProps = (dispatch) => ({
   hideModal: () => dispatch(hideModal()),
@@ -77,6 +77,8 @@ var cheese = [
   "WY",
 ];
 
+var cheeseColor = [];
+
 let figureout = (abbreviation) => {
   var finder = cheese.indexOf(abbreviation);
   console.log(finder + " figureout " + abbreviation + " abbreviation");
@@ -91,7 +93,202 @@ class App extends Component {
     this.openConfirmModal(boat);
   };
   statesFilling = () => {
-    return {};
+    var { isLoaded, citems } = this.state;
+    var x = -1;
+    while (x < 55) {
+      x++;
+
+      if (citems[x].positive > 1000000) {
+        cheeseColor.push("darkred");
+      } else if (citems[x].positive > 900000) {
+        cheeseColor.push("red");
+      } else if (citems[x].positive > 500000) {
+        cheeseColor.push("firebrick");
+      } else if (citems[x].positive > 300000) {
+        cheeseColor.push("crimson");
+      } else if (citems[x].positive > 150000) {
+        cheeseColor.push("indianred");
+      } else if (citems[x].positive > 90000) {
+        cheeseColor.push("lightcoral");
+      } else if (citems[x].positive > 50000) {
+        cheeseColor.push("darksalmon");
+      } else if (citems[x].positive > 20000) {
+        cheeseColor.push("salmon");
+      } else if (citems[x].positive < 20000) {
+        cheeseColor.push("lightsalmon");
+      }
+      console.log(cheeseColor[x]);
+    }
+    return {
+      AK: {
+        fill: cheeseColor[0],
+      },
+      AL: {
+        fill: cheeseColor[1],
+      },
+      AR: {
+        fill: cheeseColor[2],
+      },
+      AS: {
+        fill: cheeseColor[3],
+      },
+      AZ: {
+        fill: cheeseColor[4],
+      },
+      CA: {
+        fill: cheeseColor[5],
+      },
+      CO: {
+        fill: cheeseColor[6],
+      },
+      CT: {
+        fill: cheeseColor[7],
+      },
+      DC: {
+        fill: cheeseColor[8],
+      },
+      DE: {
+        fill: cheeseColor[9],
+      },
+      FL: {
+        fill: cheeseColor[10],
+      },
+      GA: {
+        fill: cheeseColor[11],
+      },
+      GU: {
+        fill: cheeseColor[12],
+      },
+      HI: {
+        fill: cheeseColor[13],
+      },
+      IA: {
+        fill: cheeseColor[14],
+      },
+      ID: {
+        fill: cheeseColor[15],
+      },
+      IL: {
+        fill: cheeseColor[16],
+      },
+      IN: {
+        fill: cheeseColor[17],
+      },
+      KS: {
+        fill: cheeseColor[18],
+      },
+      KY: {
+        fill: cheeseColor[19],
+      },
+      LA: {
+        fill: cheeseColor[20],
+      },
+      MA: {
+        fill: cheeseColor[21],
+      },
+      MD: {
+        fill: cheeseColor[22],
+      },
+      ME: {
+        fill: cheeseColor[23],
+      },
+      MI: {
+        fill: cheeseColor[24],
+      },
+      MN: {
+        fill: cheeseColor[25],
+      },
+      MO: {
+        fill: cheeseColor[26],
+      },
+      MP: {
+        fill: cheeseColor[27],
+      },
+      MS: {
+        fill: cheeseColor[28],
+      },
+      MT: {
+        fill: cheeseColor[29],
+      },
+      NC: {
+        fill: cheeseColor[30],
+      },
+      ND: {
+        fill: cheeseColor[31],
+      },
+      NE: {
+        fill: cheeseColor[32],
+      },
+      NH: {
+        fill: cheeseColor[33],
+      },
+      NJ: {
+        fill: cheeseColor[34],
+      },
+      NM: {
+        fill: cheeseColor[35],
+      },
+      NV: {
+        fill: cheeseColor[36],
+      },
+      NY: {
+        fill: cheeseColor[37],
+      },
+      OH: {
+        fill: cheeseColor[38],
+      },
+      OK: {
+        fill: cheeseColor[39],
+      },
+      OR: {
+        fill: cheeseColor[40],
+      },
+      PA: {
+        fill: cheeseColor[41],
+      },
+      PR: {
+        fill: cheeseColor[42],
+      },
+      RI: {
+        fill: cheeseColor[43],
+      },
+      SC: {
+        fill: cheeseColor[44],
+      },
+      SD: {
+        fill: cheeseColor[45],
+      },
+      TN: {
+        fill: cheeseColor[46],
+      },
+      TX: {
+        fill: cheeseColor[47],
+      },
+      UT: {
+        fill: cheeseColor[48],
+      },
+      VA: {
+        fill: cheeseColor[49],
+      },
+      VI: {
+        fill: cheeseColor[50],
+      },
+      VT: {
+        fill: cheeseColor[51],
+      },
+      WA: {
+        fill: cheeseColor[52],
+      },
+      WI: {
+        fill: cheeseColor[53],
+      },
+      WV: {
+        fill: cheeseColor[54],
+      },
+      WY: {
+        fill: cheeseColor[55],
+      },
+    };
   };
   constructor(props) {
     super(props);
