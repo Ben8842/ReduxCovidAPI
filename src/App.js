@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import { max } from "mathjs";
 import ModalRoot from "./ModalRoot";
 
 import "./dist/css/template.css";
@@ -77,11 +77,70 @@ var cheese = [
   "WY",
 ];
 
+var popu = [
+  731545,
+  4903185,
+  3017825,
+  55465,
+  7278717,
+  39512223,
+  5758736,
+  3565287,
+  705749,
+  973764,
+  21477737,
+  10617423,
+  165768,
+  1415872,
+  3155070,
+  1787065,
+  12671821,
+  6732219,
+  2913314,
+  4467673,
+  4648794,
+  6949503,
+  6045680,
+  1344212,
+  9986857,
+  5639632,
+  6137428,
+  56882,
+  2976149,
+  1068778,
+  10488084,
+  762062,
+  1934408,
+  1359711,
+  8882190,
+  2096829,
+  3080156,
+  19453561,
+  11689100,
+  3956971,
+  4217737,
+  12801989,
+  3194000,
+  1059361,
+  5148714,
+  884659,
+  6833174,
+  28995881,
+  3205958,
+  8535519,
+  106977,
+  623989,
+  7614893,
+  5822434,
+  1792147,
+  578759,
+];
+
 var cheeseColor = [];
 
 let figureout = (abbreviation) => {
   var finder = cheese.indexOf(abbreviation);
-  console.log(finder + " figureout " + abbreviation + " abbreviation");
+
   return finder;
 };
 
@@ -89,36 +148,67 @@ class App extends Component {
   mapHandler = (event) => {
     //clickHandler: this.openConfirmModal;
     let boat = figureout(event.target.dataset.name);
-    console.log(boat);
+
     this.openConfirmModal(boat);
   };
   statesFilling = () => {
     var { isLoaded, citems } = this.state;
     var x = -1;
+    var y = -1;
+    var density = [];
+    while (y < 55) {
+      y++;
+      density.push(citems[y].positive / popu[y]);
+    }
+    var maxy = Math.max(...density);
+    var minny = Math.min(...density);
+    console.log(Math.max(...density) + "hi" + Math.min(...density));
+    var diffyTen = maxy / 10;
+
+    var blue = 0;
+    var green = 0;
+    var red = 255;
+
     while (x < 55) {
       x++;
-
-      if (citems[x].positive > 1000000) {
-        cheeseColor.push("darkred");
-      } else if (citems[x].positive > 900000) {
-        cheeseColor.push("red");
-      } else if (citems[x].positive > 500000) {
-        cheeseColor.push("firebrick");
-      } else if (citems[x].positive > 300000) {
-        cheeseColor.push("crimson");
-      } else if (citems[x].positive > 150000) {
-        cheeseColor.push("indianred");
-      } else if (citems[x].positive > 90000) {
-        cheeseColor.push("lightcoral");
-      } else if (citems[x].positive > 50000) {
-        cheeseColor.push("darksalmon");
-      } else if (citems[x].positive > 20000) {
-        cheeseColor.push("salmon");
-      } else if (citems[x].positive < 20000) {
-        cheeseColor.push("lightsalmon");
+      var toty = Math.floor((density[x] / maxy) * 510);
+      console.log(toty);
+      if (toty <= 255) {
+        green = Math.floor(255 - toty);
+        blue = Math.floor(255 - toty);
+        cheeseColor.push("rgb(255," + green + "," + blue + ")");
       }
-      console.log(cheeseColor[x]);
+      if (toty > 255) {
+        red = Math.floor(510 - toty);
+        green = 0;
+        blue = 0;
+        cheeseColor.push("rgb(" + red + "," + green + "," + blue + ")");
+      }
+
+      //console.log(density[x]);
+      /*
+      if (density[x] > maxy - diffyTen) {
+        cheeseColor.push("#2C0800");
+      } else if (density[x] > maxy - 2 * diffyTen) {
+        cheeseColor.push("#AB2100");
+      } else if (density[x] > maxy - 3 * diffyTen) {
+        cheeseColor.push("#C92E09");
+      } else if (density[x] > maxy - 4 * diffyTen) {
+        cheeseColor.push("#DC4A27");
+      } else if (density[x] > maxy - 5 * diffyTen) {
+        cheeseColor.push("#EB7255");
+      } else if (density[x] > maxy - 6 * diffyTen) {
+        cheeseColor.push("#F3A08C");
+      } else if (density[x] > maxy - 7 * diffyTen) {
+        cheeseColor.push("#FAC8BC");
+      } else if (density[x] > maxy - 8 * diffyTen) {
+        cheeseColor.push("#FFD9D0");
+      } else if (density[x] < maxy - 8 * diffyTen) {
+        cheeseColor.push("#FFE9E4");
+      }*/
+      //console.log(cheeseColor[x]);
     }
+
     return {
       AK: {
         fill: cheeseColor[0],
@@ -303,7 +393,9 @@ class App extends Component {
     this.openConfirmModal = this.openConfirmModal.bind(this);
     this.openDeleteModal = this.openDeleteModal.bind(this);
     this.openPromptModal = this.openPromptModal.bind(this);
+    this.openSignUpModal = this.openSignUpModal.bind(this);
     this.showInput = this.showInput.bind(this);
+    this.submitSignUp = this.submitSignUp.bind(this);
   }
 
   componentDidMount() {
@@ -341,6 +433,25 @@ class App extends Component {
     );
   }
 
+  submitSignUp() {
+    const { email, username, password } = this.state;
+    fetch("http://localhost:5000/users", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify({ email, username, password }),
+      // body data type must match "Content-Type" header
+    }).then((res) => {
+      console.log(res);
+    });
+  }
+
   openAlertModal() {
     this.props.showModal(
       {
@@ -355,15 +466,22 @@ class App extends Component {
 
   openConfirmModal(file) {
     var { isLoaded, citems } = this.state;
-    console.log(file + " number is the index");
+    var pos = citems[file].positive;
+    var pop = popu[file];
+    var hos = citems[file].hospitalizedCurrently;
+    var det = citems[file].death;
+
     this.props.showModal(
       {
         open: true,
         title: citems[file].state,
-        message: citems[file].positive + " positive cases",
-        message2:
-          citems[file].hospitalizedCurrently + " are currently hospitalized",
-        message3: citems[file].death + " total deaths",
+        message:
+          pos.toLocaleString() +
+          " positive cases " +
+          " and the population is " +
+          pop.toLocaleString(),
+        message2: hos.toLocaleString() + " are currently hospitalized",
+        message3: det.toLocaleString() + " total deaths",
         confirmAction: this.closeModal,
         closeModal: this.closeModal,
       },
@@ -399,6 +517,35 @@ class App extends Component {
         ],
         onInputChange: this.onInputChange,
         confirmAction: this.showInput,
+      },
+      "prompt"
+    );
+  }
+
+  openSignUpModal() {
+    this.props.showModal(
+      {
+        open: true,
+        title: "Prompt Modal",
+        fields: [
+          {
+            name: "email",
+            placeholder: "email address",
+            showLabel: false,
+          },
+          {
+            name: "username",
+            placeholder: "username",
+            showLabel: false,
+          },
+          {
+            name: "password",
+            placeholder: "password",
+            showLabel: false,
+          },
+        ],
+        onInputChange: this.onInputChange,
+        confirmAction: this.submitSignUp,
       },
       "prompt"
     );
@@ -450,6 +597,14 @@ class App extends Component {
                   onClick={this.openPromptModal}
                 >
                   prompt
+                </button>
+              </div>
+              <div className="col">
+                <button
+                  className="btn btn-outline-primary btn-block"
+                  onClick={this.openSignUpModal}
+                >
+                  SIGN UP
                 </button>
               </div>
             </div>
