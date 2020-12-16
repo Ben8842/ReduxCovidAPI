@@ -396,6 +396,8 @@ class App extends Component {
     this.openSignUpModal = this.openSignUpModal.bind(this);
     this.showInput = this.showInput.bind(this);
     this.submitSignUp = this.submitSignUp.bind(this);
+    this.openLogInModal = this.openLogInModal.bind(this);
+    this.submitLogIn = this.submitLogIn.bind(this);
   }
 
   componentDidMount() {
@@ -446,6 +448,25 @@ class App extends Component {
       },
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email, username, password }),
+      // body data type must match "Content-Type" header
+    }).then((res) => {
+      console.log(res);
+    });
+  }
+
+  submitLogIn() {
+    const { username, password } = this.state;
+    fetch("http://localhost:5000/users", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify({ username, password }),
       // body data type must match "Content-Type" header
     }).then((res) => {
       console.log(res);
@@ -526,7 +547,7 @@ class App extends Component {
     this.props.showModal(
       {
         open: true,
-        title: "Prompt Modal",
+        title: "Sign Up",
         fields: [
           {
             name: "email",
@@ -551,6 +572,30 @@ class App extends Component {
     );
   }
 
+  openLogInModal() {
+    this.props.showModal(
+      {
+        open: true,
+        title: "Log In",
+        fields: [
+          {
+            name: "username",
+            placeholder: "username",
+            showLabel: false,
+          },
+          {
+            name: "password",
+            placeholder: "password",
+            showLabel: false,
+          },
+        ],
+        onInputChange: this.onInputChange,
+        confirmAction: this.submitLogIn,
+      },
+      "prompt"
+    );
+  }
+
   render() {
     var { isLoaded, citems } = this.state;
     if (!isLoaded) {
@@ -558,6 +603,26 @@ class App extends Component {
     } else {
       return (
         <div className="app">
+          <div className="container">
+            <div className="d-flex flex-row-reverse">
+              <div className="p-2">
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={this.openSignUpModal}
+                >
+                  SIGN UP
+                </button>
+              </div>
+              <div className="p-2">
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={this.openLogInModal}
+                >
+                  LOG IN
+                </button>
+              </div>
+            </div>
+          </div>
           <h1 className="app-titles">COVID-19</h1>
           <h1 className="app-titles">Click on a State</h1>
           <USAMap customize={this.statesFilling()} onClick={this.mapHandler} />
