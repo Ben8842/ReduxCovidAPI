@@ -6,6 +6,12 @@ body {
   color: white;
 }
 
+.app-titlesH {
+  color: white;
+  text-align: right;
+  padding: 25px;
+}
+
 path {
   pointer-events: all;
 }

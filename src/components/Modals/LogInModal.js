@@ -7,6 +7,7 @@ const LoginModal = ({
   fields,
   onInputChange,
   showLabel,
+  modalError,
 }) => {
   return (
     <div className="modal-content">
@@ -41,7 +42,9 @@ const LoginModal = ({
             );
           })}
         </form>
+        <p>{modalError}</p>
       </div>
+
       <div className="modal-footer">
         <button
           type="button"

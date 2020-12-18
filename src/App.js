@@ -6,7 +6,7 @@ import ModalRoot from "./ModalRoot";
 import "./dist/css/template.css";
 import "./App.css";
 
-import { showModal, hideModal } from "./actions/modal";
+import { showModal, hideModal, createModalError } from "./actions/modal";
 import USAMap from "react-usa-map";
 
 const MESSAGE = "A modal component.";
@@ -15,6 +15,9 @@ const mapDispatchToProps = (dispatch) => ({
   hideModal: () => dispatch(hideModal()),
   showModal: (modalProps, modalType) => {
     dispatch(showModal({ modalProps, modalType }));
+  },
+  createModalError: (modalError) => {
+    dispatch(createModalError(modalError));
   },
 });
 
@@ -162,7 +165,7 @@ class App extends Component {
     }
     var maxy = Math.max(...density);
     var minny = Math.min(...density);
-    console.log(Math.max(...density) + "hi" + Math.min(...density));
+    //console.log(Math.max(...density) + "hi" + Math.min(...density));
     var diffyTen = maxy / 10;
 
     var blue = 0;
@@ -172,7 +175,7 @@ class App extends Component {
     while (x < 55) {
       x++;
       var toty = Math.floor((density[x] / maxy) * 510);
-      console.log(toty);
+      // console.log(toty);
       if (toty <= 255) {
         green = Math.floor(255 - toty);
         blue = Math.floor(255 - toty);
@@ -451,12 +454,13 @@ class App extends Component {
       // body data type must match "Content-Type" header
     }).then((res) => {
       console.log(res);
+      this.closeModal();
     });
   }
 
   submitLogIn() {
-    const { username, password } = this.state;
-    fetch("http://localhost:5000/users", {
+    const { email, password } = this.state;
+    fetch("http://localhost:5000/authenticate", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -466,11 +470,30 @@ class App extends Component {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
       // body data type must match "Content-Type" header
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        if (res.status === 400) {
+          return res.text();
+        }
+        if (res.status === 200) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        if (typeof data === "string") {
+          console.log("message hello");
+          this.props.createModalError(data);
+        }
+        if (typeof data === "object") {
+          this.setState(data);
+          this.setState({
+            loggedin: true,
+          });
+          this.closeModal();
+        }
+      });
   }
 
   openAlertModal() {
@@ -579,8 +602,8 @@ class App extends Component {
         title: "Log In",
         fields: [
           {
-            name: "username",
-            placeholder: "username",
+            name: "email",
+            placeholder: "email",
             showLabel: false,
           },
           {
@@ -597,36 +620,44 @@ class App extends Component {
   }
 
   render() {
-    var { isLoaded, citems } = this.state;
+    var { isLoaded, citems, username, loggedin } = this.state;
     if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
-      return (
-        <div className="app">
-          <div className="container">
-            <div className="d-flex flex-row-reverse">
-              <div className="p-2">
-                <button
-                  className="btn btn-outline-primary btn-sm"
-                  onClick={this.openSignUpModal}
-                >
-                  SIGN UP
-                </button>
-              </div>
-              <div className="p-2">
-                <button
-                  className="btn btn-outline-primary btn-sm"
-                  onClick={this.openLogInModal}
-                >
-                  LOG IN
-                </button>
-              </div>
+      const authbuttons = (
+        <div className="container">
+          <div className="d-flex flex-row-reverse">
+            <div className="p-2">
+              <button
+                className="btn btn-outline-primary btn-sm"
+                onClick={this.openSignUpModal}
+              >
+                SIGN UP
+              </button>
+            </div>
+            <div className="p-2">
+              <button
+                className="btn btn-outline-primary btn-sm"
+                onClick={this.openLogInModal}
+              >
+                LOG IN
+              </button>
             </div>
           </div>
+        </div>
+      );
+
+      return (
+        <div className="app">
+          {username && loggedin ? (
+            <h6 className="app-titlesH">Logged in as {username}</h6>
+          ) : (
+            authbuttons
+          )}
+
           <h1 className="app-titles">COVID-19</h1>
           <h1 className="app-titles">Click on a State</h1>
           <USAMap customize={this.statesFilling()} onClick={this.mapHandler} />
-
           <header className="app-header">
             <h1 className="app-title">COVID-19</h1>
           </header>

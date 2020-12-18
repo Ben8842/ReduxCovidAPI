@@ -1,30 +1,52 @@
-import React from 'react'
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-const PromptModal = ({ closeModal, confirmAction, title,
-  fields, onInputChange, showLabel }) => {
-  return (
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5
-          className="modal-title"
-        >{title}</h5>
-        <button type="button" className="close" aria-label="Close" onClick={closeModal}>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div className="modal-body">
-        <form>
-          {
-            fields.map(field => {
+class PromptModal extends Component {
+  /* = ({
+  closeModal,
+  confirmAction,
+  title,
+  fields,
+  onInputChange,
+  showLabel,
+  modalError,
+}) => {
+  */
+  render() {
+    const {
+      closeModal,
+      confirmAction,
+      title,
+      fields,
+      onInputChange,
+      showLabel,
+      modalError,
+    } = this.props;
+
+    console.log(this.props);
+    return (
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">{title}</h5>
+          <button
+            type="button"
+            className="close"
+            aria-label="Close"
+            onClick={closeModal}
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <form>
+            {fields.map((field) => {
               return (
                 <div className="form-group" key={field.name}>
-                  {
-                    showLabel && (
-                      <label htmlFor="address">{`${field.label}`}</label>
-                    )
-                  }
+                  {showLabel && (
+                    <label htmlFor="address">{`${field.label}`}</label>
+                  )}
                   <input
-                    id="address"
+                    id={"prompt-modal-" + field.name}
                     name={field.name}
                     type="text"
                     className="form-control"
@@ -32,17 +54,34 @@ const PromptModal = ({ closeModal, confirmAction, title,
                     onChange={onInputChange}
                   />
                 </div>
-              )
-            })
-          }
-        </form>
+              );
+            })}
+          </form>
+          <p>{modalError} </p>
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={closeModal}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={confirmAction}
+          >
+            Continue
+          </button>
+        </div>
       </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
-        <button type="button" className="btn btn-primary" onClick={confirmAction}>Continue</button>
-      </div>
-    </div>
-  )
+    );
+  }
 }
 
-export default PromptModal
+const mapStateToProps = (state) => ({
+  ...state.modal,
+});
+
+export default connect(mapStateToProps, {})(PromptModal);

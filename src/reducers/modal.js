@@ -1,11 +1,11 @@
-import ActionTypes from '../constants/ActionTypes'
+import ActionTypes from "../constants/ActionTypes";
 
 const initialState = {
   modalType: null,
   modalProps: {
-    open: false
-  }
-}
+    open: false,
+  },
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -13,11 +13,17 @@ export default (state = initialState, action) => {
       return {
         modalProps: action.modalProps,
         modalType: action.modalType,
-        type: action.type
-      }
+        type: action.type,
+      };
     case ActionTypes.HIDE_MODAL:
-      return initialState
+      return initialState;
+    case ActionTypes.CREATE_MODAL_ERROR:
+      console.log("Create Modal error", action);
+      return {
+        ...state,
+        modalError: action.payload,
+      };
     default:
-      return state
+      return state;
   }
-}
+};
