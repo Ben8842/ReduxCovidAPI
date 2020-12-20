@@ -30,7 +30,7 @@ const SignupModal = ({
                   <label htmlFor="address">{`${field.label}`}</label>
                 )}
                 <input
-                  id="address"
+                  id={field.name}
                   name={field.name}
                   type="text"
                   className="form-control"
@@ -40,6 +40,7 @@ const SignupModal = ({
               </div>
             );
           })}
+         
         </form>
       </div>
       <div className="modal-footer">
@@ -55,7 +56,7 @@ const SignupModal = ({
           className="btn btn-primary"
           onClick={confirmAction}
         >
-          Continue
+          Submit
         </button>
       </div>
     </div>

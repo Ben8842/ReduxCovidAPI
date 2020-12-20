@@ -452,10 +452,28 @@ class App extends Component {
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify({ email, username, password }),
       // body data type must match "Content-Type" header
-    }).then((res) => {
-      console.log(res);
-      this.closeModal();
-    });
+    })
+      .then((res) => {
+        if (res.status === 400) {
+          return res.text();
+        }
+        //if (res.status === 201) {
+        else {
+          return;
+        }
+      })
+
+      .then((data) => {
+        if (typeof data === "string") {
+          console.log("duplicate user detected");
+          this.props.createModalError(data);
+        }
+        //if (typeof data === "object") {
+        else {
+          console.log("new user saved!");
+          this.closeModal();
+        }
+      });
   }
 
   submitLogIn() {
@@ -647,13 +665,28 @@ class App extends Component {
         </div>
       );
 
+      const logoutButton = (
+        <div className="container">
+          <div className="d-flex flex-row-reverse">
+            <div className="p-2">
+              <button className="btn btn-outline-primary btn-sm">
+                LOG OUT
+              </button>
+            </div>
+
+            <div className="p-2">
+              <button className="btn btn-outline-primary btn-sm">
+                SETTINGS
+              </button>
+            </div>
+            <h6 class="app-titlesH">{username} is logged in</h6>
+          </div>
+        </div>
+      );
+
       return (
         <div className="app">
-          {username && loggedin ? (
-            <h6 className="app-titlesH">Logged in as {username}</h6>
-          ) : (
-            authbuttons
-          )}
+          {username && loggedin ? logoutButton : authbuttons}
 
           <h1 className="app-titles">COVID-19</h1>
           <h1 className="app-titles">Click on a State</h1>
