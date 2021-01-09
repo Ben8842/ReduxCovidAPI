@@ -404,12 +404,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
+    let loggedin = typeof user === "object";
     fetch("https://api.covidtracking.com/v1/states/current.json")
       .then((res) => res.json())
       .then((json) => {
         this.setState({
           isLoaded: true,
           citems: json,
+          ...user,
+          loggedin: loggedin,
         });
       });
   }
@@ -505,6 +510,8 @@ class App extends Component {
           this.props.createModalError(data);
         }
         if (typeof data === "object") {
+          localStorage.setItem("user", JSON.stringify(data));
+          console.log(data);
           this.setState(data);
           this.setState({
             loggedin: true,
@@ -638,6 +645,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state);
     var { isLoaded, citems, username, loggedin } = this.state;
     if (!isLoaded) {
       return <div>Loading...</div>;
