@@ -702,7 +702,33 @@ class App extends Component {
           <header className="app-header">
             <h1 className="app-title">COVID-19</h1>
           </header>
-          <div className="container">
+
+          <span className="app-intro">
+            To get started, edit <code>src/App.js</code> and save to reload.
+          </span>
+          <ModalRoot hideModal={this.props.hideModal} />
+        </div>
+      );
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);
+
+/*
+ <ul>
+   DATA HAS BEEN LOADED
+   {citems.map((item) => (
+     <li key={item.id}>
+       Positive Cases: {item.positive} | State: {item.state} | {item.id}
+     </li>
+   ))}
+   ;
+ </ul>;
+
+ */
+
+/*<div className="container">
             <div className="modal-types row d-flex justify-content-center align-items-center">
               <div className="col">
                 <button
@@ -745,25 +771,4 @@ class App extends Component {
                 </button>
               </div>
             </div>
-          </div>
-          <ul>
-            DATA HAS BEEN LOADED
-            {citems.map((item) => (
-              <li key={item.id}>
-                Positive Cases: {item.positive} | State: {item.state} |{" "}
-                {item.id}
-              </li>
-            ))}
-            ;
-          </ul>
-          <span className="app-intro">
-            To get started, edit <code>src/App.js</code> and save to reload.
-          </span>
-          <ModalRoot hideModal={this.props.hideModal} />
-        </div>
-      );
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(App);
+          </div>*/
